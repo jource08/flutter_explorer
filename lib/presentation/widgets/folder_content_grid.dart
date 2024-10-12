@@ -38,7 +38,7 @@ class FolderContentGrid extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.insert_drive_file, size: 48),
-                  Text('${file.name}.${file.type}'),
+                  Text(file.name),
                 ],
               ),
             )),

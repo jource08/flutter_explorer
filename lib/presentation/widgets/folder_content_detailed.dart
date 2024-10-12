@@ -73,7 +73,7 @@ class FolderContentDetailed extends StatelessWidget {
                       child: Row(
                     children: [
                       const Icon(Icons.insert_drive_file),
-                      Text('${file.name}.${file.type}'),
+                      Text(file.name),
                     ],
                   )),
                   Expanded(child: Text(file.modifiedAt.toString())),
