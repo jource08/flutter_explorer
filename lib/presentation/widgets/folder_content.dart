@@ -17,11 +17,6 @@ class FolderContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Folder: ${folder.name}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ),
-        const Divider(),
         Expanded(
           child: ListView(
             children: [
@@ -32,7 +27,7 @@ class FolderContent extends StatelessWidget {
               )),
               // Display files if they are not hidden
               ...provider.getVisibleFiles(folder).map((file) => ListTile(
-                title: Text(file.name),
+                title: Text('${file.name}.${file.type}'),
                 leading: const Icon(Icons.insert_drive_file),
               )),
             ],

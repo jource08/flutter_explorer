@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_explorer/presentation/widgets/folder_content.dart';
 import 'package:flutter_explorer/presentation/widgets/folder_tree.dart';
+import 'package:flutter_explorer/presentation/widgets/toolbar.dart'; // Import the Toolbar
 
 class ExplorerPage extends StatelessWidget {
   const ExplorerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Explorer')),
-      body: const Row(
+    return const Scaffold(
+      appBar: Toolbar(), // Use the Toolbar widget
+      body: Row(
         children: [
           // Left Panel: Folder Structure
           Expanded(
@@ -19,7 +20,7 @@ class ExplorerPage extends StatelessWidget {
           // Right Panel: Contents of Selected Folder
           Expanded(
             flex: 2,
-            child: const FolderContent(),
+            child: FolderContent(),
           ),
         ],
       ),
