@@ -6,7 +6,7 @@ import 'package:flutter_explorer/domain/entites/folder.dart';
 class FolderProvider extends ChangeNotifier {
   Folder? _selectedFolder;
   Folder? get selectedFolder => _selectedFolder;
-  
+
   final Folder rootFolder = mockData;
 
   // Track expanded folders
@@ -17,7 +17,9 @@ class FolderProvider extends ChangeNotifier {
   bool get initialExpandAll => _initialExpandAll;
 
   FolderProvider() {
-    _selectedFolder = rootFolder;
+    // _selectedFolder = rootFolder; // Initially select root folder
+
+    _selectedFolder = null; // Initially no folder is selected
   }
 
   void selectFolder(Folder folder) {

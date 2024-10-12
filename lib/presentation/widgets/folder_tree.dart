@@ -50,13 +50,17 @@ class FolderTreeItem extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              provider.selectFolder(folder); // Select folder on double tap
+              provider.selectFolder(folder); // Select folder on tap
+              // if(!isSelected) {
+              //   provider.toggleFolderExpansion(
+              //           folder);
+              // }
             },
             child: Row(
               children: [
                 GestureDetector(
                     onTap: () => provider.toggleFolderExpansion(
-                        folder), // Toggle expansion state via provider,
+                        folder), // Toggle expansion state via provider
                     child: Icon(isExpanded ? Icons.remove : Icons.add)),
                 Row(
                   children: [
