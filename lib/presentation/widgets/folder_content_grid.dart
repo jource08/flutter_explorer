@@ -13,20 +13,27 @@ class FolderContentGrid extends StatelessWidget {
     final provider = Provider.of<FolderProvider>(context);
 
     return GridView.count(
-      crossAxisCount: 3, // Number of columns in the grid
+      crossAxisCount: 4, // Number of columns in the grid
       children: [
         // Display subfolders if they are not hidden
-        ...provider.getVisibleSubFolders(folder).map((subFolder) => Card(
+        ...provider.getVisibleSubFolders(folder).map((subFolder) => InkWell(
+              onTap: () {},
+              onDoubleTap: () => provider.selectFolder(subFolder),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.folder, size: 48), // You can use subFolder.icon here
+                  const Icon(Icons.folder, size: 48),
                   Text(subFolder.name),
                 ],
               ),
             )),
         // Display files if they are not hidden
-        ...provider.getVisibleFiles(folder).map((file) => Card(
+        ...provider.getVisibleFiles(folder).map((file) => InkWell(
+              onTap: () {},
+              onDoubleTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("File open event")));
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
