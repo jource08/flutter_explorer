@@ -18,12 +18,18 @@ class FolderTree extends StatelessWidget {
       }
     });
 
-    return Expanded(
-      child: ListView(
-        children: [
-          FolderTreeItem(
-              folder: rootFolder, depth: 0), // Start with depth 0 for root
-        ],
+    return Container(
+      decoration: const BoxDecoration(
+          border: Border(
+        right: BorderSide(width: 1, color: Colors.black38),
+      )),
+      child: Expanded(
+        child: ListView(
+          children: [
+            FolderTreeItem(
+                folder: rootFolder, depth: 0), // Start with depth 0 for root
+          ],
+        ),
       ),
     );
   }
