@@ -6,13 +6,23 @@ class ToolbarProvider extends ChangeNotifier {
   // Initial path value
   String _currentPath = '';
 
-  // Getter for the current path
+  // Track the current view type (list or grid)
+  bool _isGridView = false;
+
+  // Getters for current path and view state
   String get currentPath => _currentPath;
+  bool get isGridView => _isGridView;
 
   // Method to set the current path
   void setPath(String newPath) {
     _currentPath = newPath;
     notifyListeners(); // Notify listeners about the change
+  }
+
+  // Method to toggle between grid and detailed views
+  void toggleView() {
+    _isGridView = !_isGridView; // Toggle the view type
+    notifyListeners();
   }
 
   // Method to implement back functionality
@@ -36,7 +46,7 @@ class ToolbarProvider extends ChangeNotifier {
   // Method to implement refresh functionality
   void refresh() {
     // Implement refresh logic here
-    // This might involve re-fetching data based on _currentPath
-    notifyListeners(); // Notify listeners if the path changes or data is refreshed
+    // Notify listeners if the path changes or data is refreshed
+    notifyListeners();
   }
 }

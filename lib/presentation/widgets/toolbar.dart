@@ -10,7 +10,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pathProvider = Provider.of<ToolbarProvider>(context);
+    final toolbarProvider = Provider.of<ToolbarProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -20,35 +20,35 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                pathProvider.goBack(); // Implement back functionality
+                toolbarProvider.goBack(); // Implement back functionality
               },
             ),
             // Forward Button
             IconButton(
               icon: const Icon(Icons.arrow_forward),
               onPressed: () {
-                pathProvider.goForward(); // Implement forward functionality
+                toolbarProvider.goForward(); // Implement forward functionality
               },
             ),
             // Up Button
             IconButton(
               icon: const Icon(Icons.arrow_upward),
               onPressed: () {
-                pathProvider.goUp(); // Implement up functionality
+                toolbarProvider.goUp(); // Implement up functionality
               },
             ),
             // Refresh Button
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                pathProvider.refresh(); // Implement refresh functionality
+                toolbarProvider.refresh(); // Implement refresh functionality
               },
             ),
             const SizedBox(width: 8),
             // Current Path Input
             Expanded(
               child: TextField(
-                controller: pathProvider.pathController,
+                controller: toolbarProvider.pathController,
                 decoration: InputDecoration(
                   hintText: 'Enter path',
                   border: OutlineInputBorder(
@@ -58,7 +58,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
                   fillColor: Colors.white,
                 ),
                 onSubmitted: (value) {
-                  pathProvider.setPath(value); // Update path when submitted
+                  toolbarProvider.setPath(value); // Update path when submitted
                 },
               ),
             ),
@@ -89,7 +89,10 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
       body: const Column(
         children: [
           SecondaryToolbar(), // Include the secondary toolbar here
-          // Your main content goes here (e.g., folder tree)
+          // Your main content goes here (e.g., folder tree or files)
+          // This could be a widget that displays folders and files
+          // For example: FolderContent(), 
+          // Make sure to include the content below the toolbar
         ],
       ),
     );
@@ -101,6 +104,8 @@ class SecondaryToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final toolbarProvider = Provider.of<ToolbarProvider>(context);
+
     return Container(
       padding: const EdgeInsets.all(8.0),
       color: Colors.grey[200],
@@ -170,6 +175,7 @@ class SecondaryToolbar extends StatelessWidget {
             position: PopupMenuPosition.under,
             onSelected: (value) {
               // Implement sort functionality based on value
+              // For example: sortItems(value);
             },
             itemBuilder: (context) {
               return [
@@ -184,7 +190,11 @@ class SecondaryToolbar extends StatelessWidget {
           PopupMenuButton<String>(
             position: PopupMenuPosition.under,
             onSelected: (value) {
-              // Implement view functionality based on value
+              if (value == 'list') {
+                toolbarProvider.toggleView(); // Call toggleView method to switch to list view
+              } else if (value == 'grid') {
+                toolbarProvider.toggleView(); // Call toggleView method to switch to grid view
+              }
             },
             itemBuilder: (context) {
               return [
