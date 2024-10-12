@@ -21,7 +21,8 @@ class FolderTree extends StatelessWidget {
     return Expanded(
       child: ListView(
         children: [
-          FolderItem(folder: rootFolder, depth: 0), // Start with depth 0 for root
+          FolderItem(
+              folder: rootFolder, depth: 0), // Start with depth 0 for root
         ],
       ),
     );
@@ -49,14 +50,14 @@ class FolderItem extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              provider.toggleFolderExpansion(folder); // Toggle expansion state via provider
-            },
-            onDoubleTap: () {
               provider.selectFolder(folder); // Select folder on double tap
             },
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                GestureDetector(
+                    onTap: () => provider.toggleFolderExpansion(
+                        folder), // Toggle expansion state via provider,
+                    child: Icon(isExpanded ? Icons.remove : Icons.add)),
                 Row(
                   children: [
                     const Icon(Icons.folder),
@@ -64,13 +65,13 @@ class FolderItem extends StatelessWidget {
                     Text(
                       folder.name,
                       style: TextStyle(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: isSelected ? Colors.blue : Colors.black,
                       ),
                     ),
                   ],
                 ),
-                const Icon(Icons.arrow_drop_down),
               ],
             ),
           ),
