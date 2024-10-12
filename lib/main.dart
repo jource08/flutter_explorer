@@ -8,7 +8,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => FolderProvider()),
+        ChangeNotifierProvider(create: (_) => FolderProvider(initialExpandAll: true)),
         ChangeNotifierProvider(create: (_) => ToolbarProvider()),
       ],
       child: const MyApp(),

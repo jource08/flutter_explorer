@@ -6,11 +6,12 @@ import 'package:flutter_explorer/domain/entites/folder.dart';
 class FolderProvider extends ChangeNotifier {
   Folder? _selectedFolder;
   Folder? get selectedFolder => _selectedFolder;
-  String? _selectedItemId; 
+  String? _selectedItemId;
+  
+  final bool initialExpandAll;  // Add this flag
+  final Folder rootFolder = mockData;
 
-final Folder rootFolder = mockData;
-
-  FolderProvider() {
+  FolderProvider({this.initialExpandAll = false}) {
     _selectedFolder = rootFolder;
   }
 
@@ -19,13 +20,11 @@ final Folder rootFolder = mockData;
     notifyListeners();
   }
 
-  void selectItem(String id) {
-    _selectedItemId = id;
-    notifyListeners();
-  }
-  
   bool shouldExpandFolder(Folder folder) {
-    // Check if the selected folder is this folder
+    if (initialExpandAll) {
+      return true;  // Expand all folders if the flag is set
+    }
+    // Check if the selected folder is this folder or any of its ancestors
     if (_selectedFolder == folder) return true;
 
     // Check if any of the subfolders contain the selected folder
@@ -34,6 +33,11 @@ final Folder rootFolder = mockData;
     }
 
     return false; // Folder should not expand if not selected
+  }
+
+  void selectItem(String id) {
+    _selectedItemId = id;
+    notifyListeners();
   }
 
   bool isSelected(String id) {
