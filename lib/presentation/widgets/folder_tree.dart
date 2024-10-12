@@ -11,44 +11,53 @@ class FolderTree extends StatelessWidget {
     final provider = Provider.of<FolderProvider>(context);
     final rootFolder = provider.rootFolder;
 
-    return ListView(
-      children: [
-        FolderItem(folder: rootFolder),
-      ],
+    return Expanded(
+      child: ListView(
+        children: [
+          FolderItem(
+              folder: rootFolder, depth: 0), // Start with depth 0 for root
+        ],
+      ),
     );
   }
 }
 
 class FolderItem extends StatelessWidget {
   final Folder folder;
+  final int depth;
 
-  const FolderItem({super.key, required this.folder});
+  const FolderItem({super.key, required this.folder, required this.depth});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<FolderProvider>(context);
-    final isSelected = provider.selectedFolder?.id == folder.id; // Check if this folder is selected
+    final isSelected = provider.selectedFolder?.id == folder.id;
+    final isExpanded =
+        provider.shouldExpandFolder(folder); // Check if it should expand
 
-    return ExpansionTile(
-      leading: const Icon(Icons.folder), // Default folder icon
-      title: Text(
-        folder.name,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // Bold if selected
-          color: isSelected ? Colors.blue : Colors.black, // Change color if selected
+    return Padding(
+      padding: EdgeInsets.only(left: depth * 16.0),
+      child: ExpansionTile(
+        initiallyExpanded:
+            isExpanded, // Set initial expanded state based on provider
+        leading: const Icon(Icons.folder),
+        title: Text(
+          folder.name,
+          style: TextStyle(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? Colors.blue : Colors.black,
+          ),
         ),
+        children: [
+          for (var subFolder in provider.getVisibleSubFolders(folder))
+            FolderItem(folder: subFolder, depth: depth + 1),
+        ],
+        onExpansionChanged: (isExpanded) {
+          if (isExpanded) {
+            provider.selectFolder(folder); // Select the folder when expanded
+          }
+        },
       ),
-      children: [
-        // Display subfolders if they are not hidden
-        for (var subFolder in provider.getVisibleSubFolders(folder))
-          FolderItem(folder: subFolder), // Recursive call for subfolders
-      ],
-      onExpansionChanged: (isExpanded) {
-        // Select the folder when expanded
-        if (isExpanded) {
-          provider.selectFolder(folder); // Select the folder when expanded
-        }
-      },
     );
   }
 }

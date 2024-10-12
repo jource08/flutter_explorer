@@ -23,6 +23,18 @@ final Folder rootFolder = mockData;
     _selectedItemId = id;
     notifyListeners();
   }
+  
+  bool shouldExpandFolder(Folder folder) {
+    // Check if the selected folder is this folder
+    if (_selectedFolder == folder) return true;
+
+    // Check if any of the subfolders contain the selected folder
+    for (var subFolder in folder.subFolders) {
+      if (shouldExpandFolder(subFolder)) return true;
+    }
+
+    return false; // Folder should not expand if not selected
+  }
 
   bool isSelected(String id) {
     return _selectedItemId == id;

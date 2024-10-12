@@ -35,7 +35,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
             IconButton(
               icon: const Icon(Icons.arrow_upward),
               onPressed: () {
-                toolbarProvider.goUp(); // Implement up functionality
+                toolbarProvider.goUp(); // Go up one level
               },
             ),
             // Refresh Button
