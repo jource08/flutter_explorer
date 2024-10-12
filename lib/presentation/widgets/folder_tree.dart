@@ -23,13 +23,14 @@ class FolderTree extends StatelessWidget {
           border: Border(
         right: BorderSide(width: 1, color: Colors.black38),
       )),
-      child: Expanded(
-        child: ListView(
-          children: [
-            FolderTreeItem(
-                folder: rootFolder, depth: 0), // Start with depth 0 for root
-          ],
-        ),
+      // Removed Expanded here; it is not needed around ListView
+      child: ListView(
+        children: [
+          FolderTreeItem(
+            folder: rootFolder,
+            depth: 0, // Start with depth 0 for root
+          ),
+        ],
       ),
     );
   }
@@ -51,23 +52,21 @@ class FolderTreeItem extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(left: 16.0),
+      // padding: EdgeInsets.only(left: 16.0 * depth), // Adjust padding by depth
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
             onTap: () {
               provider.selectFolder(folder); // Select folder on tap
-              // if(!isSelected) {
-              //   provider.toggleFolderExpansion(
-              //           folder);
-              // }
             },
             child: Row(
               children: [
                 GestureDetector(
-                    onTap: () => provider.toggleFolderExpansion(
-                        folder), // Toggle expansion state via provider
-                    child: Icon(isExpanded ? Icons.remove : Icons.add)),
+                  onTap: () => provider.toggleFolderExpansion(
+                      folder), // Toggle expansion state via provider
+                  child: Icon(isExpanded ? Icons.remove : Icons.add),
+                ),
                 Row(
                   children: [
                     const Icon(Icons.folder),
