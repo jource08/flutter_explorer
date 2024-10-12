@@ -7,11 +7,15 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
   const Toolbar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 56); // Adjust for secondary toolbar height
+  Size get preferredSize => const Size.fromHeight(
+      kToolbarHeight + 56); // Adjust for secondary toolbar height
 
   @override
   Widget build(BuildContext context) {
     final toolbarProvider = Provider.of<ToolbarProvider>(context);
+
+    // Update the path input field with the current path
+    toolbarProvider.pathController.text = toolbarProvider.currentPath;
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +72,8 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           // Search Input
           Container(
-            width: MediaQuery.of(context).size.width * 0.25, // Set width to 25% of screen width
+            width: MediaQuery.of(context).size.width *
+                0.25, // Set width to 25% of screen width
             margin: const EdgeInsets.symmetric(horizontal: 8),
             child: TextField(
               decoration: InputDecoration(

@@ -11,11 +11,17 @@ class FolderTree extends StatelessWidget {
     final provider = Provider.of<FolderProvider>(context);
     final rootFolder = provider.rootFolder;
 
+    // Use WidgetsBinding to perform actions after the initial frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (provider.initialExpandAll) {
+        provider.expandFolderRecursively(rootFolder);
+      }
+    });
+
     return Expanded(
       child: ListView(
         children: [
-          FolderItem(
-              folder: rootFolder, depth: 0), // Start with depth 0 for root
+          FolderItem(folder: rootFolder, depth: 0), // Start with depth 0 for root
         ],
       ),
     );
@@ -32,31 +38,53 @@ class FolderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<FolderProvider>(context);
     final isSelected = provider.selectedFolder?.id == folder.id;
-    final isExpanded =
-        provider.shouldExpandFolder(folder); // Check if it should expand
+
+    // Check if the folder is expanded
+    bool isExpanded = provider.isFolderExpanded(folder);
 
     return Padding(
-      padding: EdgeInsets.only(left: depth * 16.0),
-      child: ExpansionTile(
-        initiallyExpanded:
-            isExpanded, // Set initial expanded state based on provider
-        leading: const Icon(Icons.folder),
-        title: Text(
-          folder.name,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? Colors.blue : Colors.black,
-          ),
-        ),
+      padding: const EdgeInsets.only(left: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (var subFolder in provider.getVisibleSubFolders(folder))
-            FolderItem(folder: subFolder, depth: depth + 1),
+          InkWell(
+            onTap: () {
+              provider.toggleFolderExpansion(folder); // Toggle expansion state via provider
+            },
+            onDoubleTap: () {
+              provider.selectFolder(folder); // Select folder on double tap
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.folder),
+                    const SizedBox(width: 8),
+                    Text(
+                      folder.name,
+                      style: TextStyle(
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: isSelected ? Colors.blue : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                const Icon(Icons.arrow_drop_down),
+              ],
+            ),
+          ),
+          if (isExpanded)
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Column(
+                children: [
+                  for (var subFolder in provider.getVisibleSubFolders(folder))
+                    FolderItem(folder: subFolder, depth: depth + 1),
+                ],
+              ),
+            ),
         ],
-        onExpansionChanged: (isExpanded) {
-          if (isExpanded) {
-            provider.selectFolder(folder); // Select the folder when expanded
-          }
-        },
       ),
     );
   }

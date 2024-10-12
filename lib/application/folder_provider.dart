@@ -6,12 +6,17 @@ import 'package:flutter_explorer/domain/entites/folder.dart';
 class FolderProvider extends ChangeNotifier {
   Folder? _selectedFolder;
   Folder? get selectedFolder => _selectedFolder;
-  String? _selectedItemId;
   
-  final bool initialExpandAll;  // Add this flag
   final Folder rootFolder = mockData;
 
-  FolderProvider({this.initialExpandAll = false}) {
+  // Track expanded folders
+  final Map<String, bool> _expandedFolders = {};
+
+  // Flag for initial expansion of all folders
+  bool _initialExpandAll = true;
+  bool get initialExpandAll => _initialExpandAll;
+
+  FolderProvider() {
     _selectedFolder = rootFolder;
   }
 
@@ -20,28 +25,27 @@ class FolderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool shouldExpandFolder(Folder folder) {
-    if (initialExpandAll) {
-      return true;  // Expand all folders if the flag is set
-    }
-    // Check if the selected folder is this folder or any of its ancestors
-    if (_selectedFolder == folder) return true;
-
-    // Check if any of the subfolders contain the selected folder
-    for (var subFolder in folder.subFolders) {
-      if (shouldExpandFolder(subFolder)) return true;
-    }
-
-    return false; // Folder should not expand if not selected
+  bool isFolderExpanded(Folder folder) {
+    return _expandedFolders[folder.id] ?? false;
   }
 
-  void selectItem(String id) {
-    _selectedItemId = id;
+  void toggleFolderExpansion(Folder folder) {
+    _expandedFolders[folder.id] = !(_expandedFolders[folder.id] ?? false);
+    notifyListeners(); // Notify listeners when the expansion state changes
+  }
+
+  void expandFolder(Folder folder) {
+    _expandedFolders[folder.id] = true;
     notifyListeners();
   }
 
-  bool isSelected(String id) {
-    return _selectedItemId == id;
+  // Method to recursively expand folders
+  void expandFolderRecursively(Folder folder) {
+    expandFolder(folder);
+    for (var subFolder in folder.subFolders) {
+      expandFolderRecursively(subFolder);
+    }
+    _initialExpandAll = false; // Disable further auto-expansion
   }
 
   List<Folder> getVisibleSubFolders(Folder folder) {
