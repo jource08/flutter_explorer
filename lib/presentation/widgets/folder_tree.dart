@@ -21,7 +21,7 @@ class FolderTree extends StatelessWidget {
     return Expanded(
       child: ListView(
         children: [
-          FolderItem(
+          FolderTreeItem(
               folder: rootFolder, depth: 0), // Start with depth 0 for root
         ],
       ),
@@ -29,11 +29,11 @@ class FolderTree extends StatelessWidget {
   }
 }
 
-class FolderItem extends StatelessWidget {
+class FolderTreeItem extends StatelessWidget {
   final Folder folder;
   final int depth;
 
-  const FolderItem({super.key, required this.folder, required this.depth});
+  const FolderTreeItem({super.key, required this.folder, required this.depth});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class FolderItem extends StatelessWidget {
               child: Column(
                 children: [
                   for (var subFolder in provider.getVisibleSubFolders(folder))
-                    FolderItem(folder: subFolder, depth: depth + 1),
+                    FolderTreeItem(folder: subFolder, depth: depth + 1),
                 ],
               ),
             ),
