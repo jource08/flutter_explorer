@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_explorer/application/folder_provider.dart';
 import 'package:flutter_explorer/domain/entites/folder.dart';
+import 'package:flutter_explorer/utils/conversion.dart';
 import 'package:provider/provider.dart';
 
 class FolderContentDetailed extends StatelessWidget {
@@ -90,7 +91,7 @@ class FolderContentDetailed extends StatelessWidget {
                     )),
                     Expanded(child: Text(file.modifiedAt.toString())),
                     const Expanded(child: Text('File')),
-                    Expanded(child: Text(file.size.toString())),
+                    Expanded(child: Text(formatFileSize(file.size))),
                   ],
                 ),
               ),
