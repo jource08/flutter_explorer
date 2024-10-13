@@ -5,79 +5,85 @@ import 'package:flutter_explorer/domain/entites/folder.dart';
 import 'package:flutter_explorer/services/api_service.dart';
 
 class FolderProvider extends ChangeNotifier {
+  // The currently selected folder
   Folder? _selectedFolder;
   Folder? get selectedFolder => _selectedFolder;
 
-  List<Folder> rootFolders = []; // List of root folders
-  bool _isLoading = true; // Loading state
+  // List of root folders
+  List<Folder> rootFolders = [];
+
+  // Loading state
+  bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  // Track expanded folders
+  // Tracks which folders are expanded
   final Map<String, bool> _expandedFolders = {};
-  bool _initialExpandAll = true; // Track initial expansion
+  bool _initialExpandAll = true;
   bool get initialExpandAll => _initialExpandAll;
 
-  final ApiService _apiService; // Instance of ApiService
+  // Instance of ApiService to fetch data
+  final ApiService _apiService;
 
-  // Constructor
-  FolderProvider({Dio? dio}) 
+  // Constructor initializes the ApiService and loads folders
+  FolderProvider({Dio? dio})
       : _apiService = ApiService(dio ?? Dio()) {
-    loadFolders(); // Load folders when the provider is initialized
+    loadFolders(); // Load folders when the provider is created
   }
 
-  // Load folders from the API
+  /// Loads folders from the API.
   Future<void> loadFolders() async {
     try {
-      rootFolders = await _apiService.fetchFolders(); // Fetch folders using ApiService
-      _isLoading = false; // Set loading to false once data is fetched
+      // Fetch folders using the ApiService
+      rootFolders = await _apiService.fetchFolders();
+      _isLoading = false; // Data fetched successfully, update loading state
     } catch (e) {
-      // Handle any errors here
+      // Print error message if in debug mode
       if (kDebugMode) {
         print('Error loading folders: $e');
       }
-      _isLoading = false; // Ensure loading state is reset on error
+      _isLoading = false; // Reset loading state on error
     }
-    notifyListeners(); // Notify listeners after loading is complete
+    notifyListeners(); // Notify widgets to rebuild
   }
 
-  // Select a folder
+  /// Selects a folder.
   void selectFolder(Folder folder) {
     _selectedFolder = folder;
-    notifyListeners();
+    notifyListeners(); // Notify listeners about the change
   }
 
-  // Check if a folder is expanded
+  /// Checks if a folder is expanded.
   bool isFolderExpanded(Folder folder) {
-    return _expandedFolders[folder.id] ?? false;
+    return _expandedFolders[folder.id] ?? false; // Return false if not found
   }
 
-  // Toggle the expansion state of a folder
+  /// Toggles the expansion state of a folder.
   void toggleFolderExpansion(Folder folder) {
     _expandedFolders[folder.id] = !(_expandedFolders[folder.id] ?? false);
-    notifyListeners(); // Notify listeners when the expansion state changes
+    notifyListeners(); // Notify listeners about the change
   }
 
-  // Expand a folder
+  /// Expands a folder.
   void expandFolder(Folder folder) {
     _expandedFolders[folder.id] = true;
-    notifyListeners();
+    notifyListeners(); // Notify listeners about the change
   }
 
-  // Recursively expand folders
+  /// Recursively expands a folder and all its subfolders.
   void expandFolderRecursively(Folder folder) {
-    expandFolder(folder);
+    expandFolder(folder); // Expand the current folder
     for (var subFolder in folder.subFolders) {
-      expandFolderRecursively(subFolder);
+      expandFolderRecursively(subFolder); // Recursively expand each subfolder
     }
     _initialExpandAll = false; // Disable further auto-expansion
   }
 
-  // Get visible subfolders that are not hidden
+  /// Gets visible subfolders that are not hidden.
   List<Folder> getVisibleSubFolders(Folder folder) {
     return folder.subFolders.where((subFolder) => !subFolder.isHidden).toList();
   }
 
-  // Get visible files that are not hidden
+  /// Gets visible files that are not hidden.
   List<File> getVisibleFiles(Folder folder) {
     return folder.files.where((file) => !file.isHidden).toList();
   }
