@@ -18,7 +18,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
     final toolbarProvider = Provider.of<ToolbarProvider>(context);
     final folderProvider = Provider.of<FolderProvider>(context);
     // Update the path input field with the current path
-    toolbarProvider.pathController.text = toolbarProvider.currentPath;
+    toolbarProvider.pathController.text = folderProvider.selectedFolder?.fullPath ?? "/";
 
     return Container(
       decoration: BoxDecoration(

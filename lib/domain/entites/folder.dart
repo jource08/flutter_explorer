@@ -8,6 +8,7 @@ class Folder {
   final List<File> files;
   final bool isHidden;
   final String icon;
+  final String fullPath;
   final DateTime createdAt;
   final DateTime? modifiedAt;
 
@@ -18,6 +19,7 @@ class Folder {
     List<Folder>? subFolders,
     List<File>? files,
     this.isHidden = false,
+    required this.fullPath,
     this.icon = 'folder',
     required this.createdAt,
     this.modifiedAt,
@@ -31,6 +33,7 @@ class Folder {
       parentId: json['parentId']?.toString(), // Convert to String if necessary
       isHidden: json['isHidden'] ?? false,
       icon: json['icon'],
+      fullPath: json['fullPath'],
       createdAt: DateTime.parse(json['createdAt']),
       modifiedAt: json['modifiedAt'] != null
           ? DateTime.parse(json['modifiedAt'])
@@ -52,6 +55,7 @@ class Folder {
       'parentId': parentId,
       'isHidden': isHidden,
       'icon': icon,
+      'fullPath': fullPath,
       'createdAt': createdAt.toIso8601String(),
       'modifiedAt': modifiedAt?.toIso8601String(),
       'files': files.map((file) => file.toJson()).toList(),
@@ -67,6 +71,7 @@ class Folder {
     List<File>? files,
     bool? isHidden,
     String? icon,
+    String? fullPath,
     DateTime? createdAt,
     DateTime? modifiedAt,
   }) {
@@ -78,6 +83,7 @@ class Folder {
       files: files ?? this.files,
       isHidden: isHidden ?? this.isHidden,
       icon: icon ?? this.icon,
+      fullPath: fullPath ?? this.fullPath,
       createdAt: createdAt ?? this.createdAt,
       modifiedAt: modifiedAt ?? this.modifiedAt,
     );

@@ -71,7 +71,7 @@ class FolderProvider extends ChangeNotifier {
         Folder? parentFolder = rootFolders.firstWhere(
           (folder) => folder.id == parentId,
           orElse: () => Folder(
-              id: '', name: '', parentId: null, createdAt: DateTime.now()),
+              id: '', name: '', parentId: null, createdAt: DateTime.now(),fullPath: "/"),
         );
 
         // If the parent folder is found, select it
