@@ -5,6 +5,10 @@ import 'package:flutter_explorer/domain/entites/folder.dart';
 import 'package:flutter_explorer/services/api_service.dart';
 
 class FolderProvider extends ChangeNotifier {
+  // The currently selected item from right side panel (folder content viewer)
+  Folder? _selectedItem;
+  Folder? get selectedItem => _selectedItem;
+
   // The currently selected folder
   Folder? _selectedFolder;
   Folder? get selectedFolder => _selectedFolder;
@@ -44,6 +48,12 @@ class FolderProvider extends ChangeNotifier {
       _isLoading = false; // Reset loading state on error
     }
     notifyListeners(); // Notify widgets to rebuild
+  }
+
+  /// Selects a item (file/folder single click from right side panel).
+  void selectItem(item) {
+    _selectedItem = item;
+    notifyListeners(); // Notify listeners about the change
   }
 
   /// Selects a folder.

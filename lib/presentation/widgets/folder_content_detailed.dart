@@ -22,7 +22,10 @@ class FolderContentDetailed extends StatelessWidget {
                 child: Row(
               children: [
                 Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
-                Icon(Icons.arrow_upward, size: 16,)
+                Icon(
+                  Icons.arrow_upward,
+                  size: 16,
+                )
               ],
             )),
             Expanded(
@@ -40,46 +43,56 @@ class FolderContentDetailed extends StatelessWidget {
 
         // Display subfolders
         ...provider.getVisibleSubFolders(folder).map((subFolder) => InkWell(
-              onTap: () {},
+              onTap: () => provider.selectItem(subFolder),
               onDoubleTap: () => provider.selectFolder(subFolder),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Row(
-                    children: [
-                      const Icon(Icons.folder),
-                      Text(subFolder.name),
-                    ],
-                  )),
-                  Expanded(child: Text(subFolder.modifiedAt.toString())),
-                  const Expanded(child: Text('Folder')),
-                  const Expanded(child: Text('')),
-                ],
+              child: Container(
+                color: provider.selectedItem?.id == subFolder.id
+                    ? Colors.black12
+                    : Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Row(
+                      children: [
+                        const Icon(Icons.folder),
+                        Text(subFolder.name),
+                      ],
+                    )),
+                    Expanded(child: Text(subFolder.modifiedAt.toString())),
+                    const Expanded(child: Text('Folder')),
+                    const Expanded(child: Text('')),
+                  ],
+                ),
               ),
             )),
 
         // Display files
         ...provider.getVisibleFiles(folder).map((file) => InkWell(
-              onTap: () {},
+              onTap: () => provider.selectItem(file),
               onDoubleTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("File open event")));
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Row(
-                    children: [
-                      const Icon(Icons.insert_drive_file),
-                      Text(file.name),
-                    ],
-                  )),
-                  Expanded(child: Text(file.modifiedAt.toString())),
-                  const Expanded(child: Text('File')),
-                  Expanded(child: Text(file.size.toString())),
-                ],
+              child: Container(
+                color: provider.selectedItem?.id == file.id
+                    ? Colors.black12
+                    : Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Row(
+                      children: [
+                        const Icon(Icons.insert_drive_file),
+                        Text(file.name),
+                      ],
+                    )),
+                    Expanded(child: Text(file.modifiedAt.toString())),
+                    const Expanded(child: Text('File')),
+                    Expanded(child: Text(file.size.toString())),
+                  ],
+                ),
               ),
             )),
       ],

@@ -46,7 +46,6 @@ class FolderTree extends StatelessWidget {
     );
   }
 }
-
 class FolderTreeItem extends StatelessWidget {
   final Folder folder;
   final int depth;
@@ -62,37 +61,35 @@ class FolderTreeItem extends StatelessWidget {
     bool isExpanded = provider.isFolderExpanded(folder);
 
     return Padding(
-      // padding: EdgeInsets.only(left: 16.0 * depth),
       padding: const EdgeInsets.only(left: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: () {
-              provider.selectFolder(folder); // Select folder on tap
-            },
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => provider.toggleFolderExpansion(
-                      folder), // Toggle expansion state via provider
-                  child: Icon(isExpanded ? Icons.remove : Icons.add),
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.folder),
-                    const SizedBox(width: 8),
-                    Text(
-                      folder.name,
-                      style: TextStyle(
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? Colors.blue : Colors.black,
-                      ),
+          // Highlight the selected folder
+          Container(
+            color: isSelected ? Colors.black12 : Colors.transparent, // Highlight color
+            child: InkWell(
+              onTap: () {
+                provider.selectFolder(folder); // Select folder on tap
+              },
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => provider.toggleFolderExpansion(folder), // Toggle expansion state via provider
+                    child: Icon(isExpanded ? Icons.remove : Icons.add),
+                  ),
+                  const SizedBox(width: 8), // Added spacing for clarity
+                  const Icon(Icons.folder),
+                  const SizedBox(width: 8),
+                  Text(
+                    folder.name,
+                    style: TextStyle(
+                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                      color: Colors.black,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
           if (isExpanded)
