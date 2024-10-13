@@ -1,5 +1,5 @@
-  // Example data (replace with real backend API later)
-  import 'package:flutter_explorer/domain/entites/file.dart';
+// Example data (replace with real backend API later)
+import 'package:flutter_explorer/domain/entites/file.dart';
 import 'package:flutter_explorer/domain/entites/folder.dart';
 
 final Folder mockData = Folder(

@@ -19,3 +19,15 @@ The application should contain the following items:
 
 - **Upon load**, the frontend requests the data from the backend and displays the complete folder structure (all folders) on the left panel with nothing on the right panel.
 - **Upon clicking one of the folders on the left panel**, the right panel displays the list of direct sub folders of the clicked folder.
+
+
+📦 <project root>
+ ├ 📂 drizzle
+ ├ 📂 src
+ │   ├ 📂 db
+ │   │  └ 📜 schema.ts
+ │   └ 📜 index.ts
+ ├ 📜 .env
+ ├ 📜 drizzle.config.ts
+ ├ 📜 package.json
+ └ 📜 tsconfig.json
