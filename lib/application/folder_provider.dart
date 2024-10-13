@@ -33,20 +33,28 @@ class FolderProvider extends ChangeNotifier {
     loadFolders(); // Load folders when the provider is created
   }
 
-  /// Loads folders from the API.
+// Method to implement refresh functionality
+  Future<void> refresh() async {
+    await loadFolders(); // Wait for folders to load
+  }
+
+// Loads folders from the API.
   Future<void> loadFolders() async {
+    _isLoading = true; // Set loading to true before starting the fetch
+    notifyListeners(); // Notify listeners to rebuild UI with loading state
+
     try {
       // Fetch folders using the ApiService
       rootFolders = await _apiService.fetchFolders();
-      _isLoading = false; // Data fetched successfully, update loading state
     } catch (e) {
       // Print error message if in debug mode
       if (kDebugMode) {
         print('Error loading folders: $e');
       }
-      _isLoading = false; // Reset loading state on error
+    } finally {
+      _isLoading = false; // Reset loading state
+      notifyListeners(); // Notify listeners to rebuild after loading
     }
-    notifyListeners(); // Notify widgets to rebuild
   }
 
   /// Selects a item (file/folder single click from right side panel).
@@ -137,14 +145,9 @@ class FolderProvider extends ChangeNotifier {
       }
     }
 
-    // Debug output
-    print('Attempting to select folder by full path: $fullPath');
-    print('Segments: $segments');
-
     // Iterate through the segments to find the corresponding folder
     for (String segment in segments) {
       if (currentFolder == null) {
-        print('No current folder available. Exiting.');
         return; // If there's no current folder, exit
       }
 
@@ -153,19 +156,13 @@ class FolderProvider extends ChangeNotifier {
 
       // Debug output
       if (currentFolder != null) {
-        print('Current folder found: ${currentFolder.name}');
-      } else {
-        print('Current folder is null after searching for: $segment');
-      }
+      } else {}
     }
 
     // If the folder is found, select it
     if (currentFolder != null) {
-      print('Selecting folder: ${currentFolder.name}');
       selectFolder(currentFolder);
-    } else {
-      print('No folder found for full path: $fullPath');
-    }
+    } else {}
   }
 
   /// Helper method to search for a folder by name in the given folder and its hierarchy.

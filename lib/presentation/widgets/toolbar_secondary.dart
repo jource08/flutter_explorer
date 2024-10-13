@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_explorer/application/toolbar_provider.dart';
+import 'package:flutter_explorer/application/folder_provider.dart'; // Import the FolderProvider
 import 'package:provider/provider.dart';
 
 class SecondaryToolbar extends StatelessWidget {
@@ -8,6 +9,10 @@ class SecondaryToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final toolbarProvider = Provider.of<ToolbarProvider>(context);
+    final folderProvider = Provider.of<FolderProvider>(context); // Access FolderProvider
+
+    // Determine if loading
+    bool isLoading = folderProvider.isLoading;
 
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -19,18 +24,20 @@ class SecondaryToolbar extends StatelessWidget {
           PopupMenuButton<String>(
             position: PopupMenuPosition.under,
             onSelected: (value) {
-              // Implement create functionality based on selected value
-              if (value == 'file') {
-                // Logic to create a new file
-              } else if (value == 'folder') {
-                // Logic to create a new folder
+              if (!isLoading) {
+                // Implement create functionality based on selected value
+                if (value == 'file') {
+                  // Logic to create a new file
+                } else if (value == 'folder') {
+                  // Logic to create a new folder
+                }
               }
             },
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.add), // New Icon
-                SizedBox(width: 4),
-                Text('New'), // New Button Text
+                const Icon(Icons.add), // New Icon
+                const SizedBox(width: 4),
+                const Text('New'), // New Button Text
               ],
             ),
             itemBuilder: (context) {
@@ -44,41 +51,53 @@ class SecondaryToolbar extends StatelessWidget {
           // Cut, Copy, Paste, Rename, Delete Buttons
           IconButton(
             icon: const Icon(Icons.cut),
-            onPressed: () {
-              // Implement Cut functionality
-            },
+            onPressed: isLoading
+                ? null
+                : () {
+                    // Implement Cut functionality
+                  },
           ),
           IconButton(
             icon: const Icon(Icons.copy),
-            onPressed: () {
-              // Implement Copy functionality
-            },
+            onPressed: isLoading
+                ? null
+                : () {
+                    // Implement Copy functionality
+                  },
           ),
           IconButton(
             icon: const Icon(Icons.paste),
-            onPressed: () {
-              // Implement Paste functionality
-            },
+            onPressed: isLoading
+                ? null
+                : () {
+                    // Implement Paste functionality
+                  },
           ),
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Implement Rename functionality
-            },
+            onPressed: isLoading
+                ? null
+                : () {
+                    // Implement Rename functionality
+                  },
           ),
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () {
-              // Implement Delete functionality
-            },
+            onPressed: isLoading
+                ? null
+                : () {
+                    // Implement Delete functionality
+                  },
           ),
           const Spacer(), // Space between buttons and sort/view menus
           // Sort Menu Button
           PopupMenuButton<String>(
             position: PopupMenuPosition.under,
             onSelected: (value) {
-              // Implement sort functionality based on value
-              // For example: sortItems(value);
+              if (!isLoading) {
+                // Implement sort functionality based on value
+                // For example: sortItems(value);
+              }
             },
             itemBuilder: (context) {
               return [
@@ -93,10 +112,12 @@ class SecondaryToolbar extends StatelessWidget {
           PopupMenuButton<String>(
             position: PopupMenuPosition.under,
             onSelected: (value) {
-              if (value == 'list') {
-                toolbarProvider.toggleView(); // Call toggleView method to switch to list view
-              } else if (value == 'grid') {
-                toolbarProvider.toggleView(); // Call toggleView method to switch to grid view
+              if (!isLoading) {
+                if (value == 'list') {
+                  toolbarProvider.toggleView(); // Call toggleView method to switch to list view
+                } else if (value == 'grid') {
+                  toolbarProvider.toggleView(); // Call toggleView method to switch to grid view
+                }
               }
             },
             itemBuilder: (context) {

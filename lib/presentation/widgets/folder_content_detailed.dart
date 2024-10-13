@@ -13,6 +13,12 @@ class FolderContentDetailed extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<FolderProvider>(context);
 
+    // Check if loading
+    if (provider.isLoading) {
+      return const Center(
+          child: CircularProgressIndicator()); // Show loading indicator
+    }
+
     return Column(
       children: [
         // Header Row

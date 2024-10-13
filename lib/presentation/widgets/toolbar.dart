@@ -23,6 +23,9 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
     // Update the path input field with the current path
     toolbarProvider.pathController.text = currentFullPath;
 
+    // Determine if loading
+    bool isLoading = folderProvider.isLoading;
+
     return Container(
       decoration: BoxDecoration(
           border: Border(
@@ -35,22 +38,28 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
               // Back Button
               IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  toolbarProvider.goBack(); // Implement back functionality
-                },
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        toolbarProvider
+                            .goBack(); // Implement back functionality
+                      },
               ),
               // Forward Button
               IconButton(
                 icon: const Icon(Icons.arrow_forward),
-                onPressed: () {
-                  toolbarProvider
-                      .goForward(); // Implement forward functionality
-                },
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        toolbarProvider
+                            .goForward(); // Implement forward functionality
+                      },
               ),
               IconButton(
                 icon: const Icon(Icons.arrow_upward),
-                onPressed: folderProvider.selectedFolder?.parentId?.isEmpty ??
-                        true
+                onPressed: (folderProvider.selectedFolder?.parentId?.isEmpty ??
+                            true) ||
+                        isLoading
                     ? null
                     : () {
                         // Get the current full path
@@ -76,14 +85,16 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
                         }
                       },
               ),
-
-              // Refresh Button
               IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  toolbarProvider.refresh(); // Implement refresh functionality
-                },
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        folderProvider
+                            .refresh(); // Call refresh directly on the folderProvider
+                      },
               ),
+
               const SizedBox(width: 8),
               // Current Path Input
               Expanded(
@@ -97,9 +108,12 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
                     filled: true,
                     fillColor: Colors.white,
                   ),
+                  enabled: !isLoading, // Disable input when loading
                   onSubmitted: (value) {
-                    toolbarProvider
-                        .setPath(value); // Update path when submitted
+                    if (!isLoading) {
+                      toolbarProvider
+                          .setPath(value); // Update path when submitted
+                    }
                   },
                 ),
               ),
@@ -121,8 +135,11 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
                   filled: true,
                   fillColor: Colors.white,
                 ),
+                enabled: !isLoading, // Disable search input when loading
                 onSubmitted: (value) {
-                  // Implement search functionality
+                  if (!isLoading) {
+                    // Implement search functionality
+                  }
                 },
               ),
             ),
