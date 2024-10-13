@@ -9,29 +9,40 @@ class FolderTree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<FolderProvider>(context);
-    final rootFolder = provider.rootFolder;
+    final rootFolders = provider
+        .rootFolders; // Changed to rootFolders to support multiple root folders
 
     // Use WidgetsBinding to perform actions after the initial frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (provider.initialExpandAll) {
-        provider.expandFolderRecursively(rootFolder);
+      if (provider.initialExpandAll && rootFolders.isNotEmpty) {
+        for (var rootFolder in rootFolders) {
+          provider.expandFolderRecursively(rootFolder);
+        }
       }
     });
 
     return Container(
       decoration: const BoxDecoration(
-          border: Border(
-        right: BorderSide(width: 1, color: Colors.black38),
-      )),
-      // Removed Expanded here; it is not needed around ListView
-      child: ListView(
-        children: [
-          FolderTreeItem(
-            folder: rootFolder,
-            depth: 0, // Start with depth 0 for root
-          ),
-        ],
+        border: Border(
+          right: BorderSide(width: 1, color: Colors.black38),
+        ),
       ),
+      child: provider.isLoading
+          ? const Center(
+              child: CircularProgressIndicator()) // Show loading indicator
+          : rootFolders.isNotEmpty // Check if rootFolders is not empty
+              ? ListView.builder(
+                  itemCount: rootFolders.length,
+                  itemBuilder: (context, index) {
+                    return FolderTreeItem(
+                      folder: rootFolders[index], // Pass each root folder
+                      depth: 0, // Start with depth 0 for root
+                    );
+                  },
+                )
+              : const Center(
+                  child: Text(
+                      'No folders available')), // Show message if no folders
     );
   }
 }
@@ -51,8 +62,8 @@ class FolderTreeItem extends StatelessWidget {
     bool isExpanded = provider.isFolderExpanded(folder);
 
     return Padding(
+      // padding: EdgeInsets.only(left: 16.0 * depth),
       padding: const EdgeInsets.only(left: 16.0),
-      // padding: EdgeInsets.only(left: 16.0 * depth), // Adjust padding by depth
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

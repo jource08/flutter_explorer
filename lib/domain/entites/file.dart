@@ -1,21 +1,49 @@
 class File {
-  final String id;  // Unique identifier
-  final String name;  // File name
-  final String type;  // File type or extension
-  final int size;  // File size in bytes
-  final String folderId;  // Reference to the folder that contains this file
-  final bool isHidden;  // Whether the file is hidden or not
-  final DateTime createdAt;  // When the file was created
-  final DateTime? modifiedAt;  // When the file was last modified
+  final String id;
+  final String name;
+  final String type;
+  final int size;
+  final String folderId;
+  final bool isHidden;
+  final DateTime createdAt;
+  final DateTime? modifiedAt;
 
   File({
     required this.id,
     required this.name,
     required this.type,
     required this.size,
-    this.modifiedAt,
-    this.isHidden = false,  // Default is not hidden
     required this.folderId,
+    this.isHidden = false,
     required this.createdAt,
+    this.modifiedAt,
   });
+
+  factory File.fromJson(Map<String, dynamic> json) {
+    return File(
+      id: json['id'].toString(), 
+      name: json['name'],
+      type: json['type'],
+      size: json['size'],
+      folderId: json['folderId'].toString(),
+      isHidden: json['isHidden'] ?? false,
+      createdAt: DateTime.parse(json['createdAt']),
+      modifiedAt: json['modifiedAt'] != null
+          ? DateTime.parse(json['modifiedAt'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'size': size,
+      'folderId': folderId,
+      'isHidden': isHidden,
+      'createdAt': createdAt.toIso8601String(),
+      'modifiedAt': modifiedAt?.toIso8601String(),
+    };
+  }
 }

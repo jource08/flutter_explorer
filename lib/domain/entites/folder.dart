@@ -1,15 +1,15 @@
 import 'package:flutter_explorer/domain/entites/file.dart';
 
 class Folder {
-  final String id; // Unique identifier
-  final String name; // Folder name, unique within the same parent
-  final String? parentId; // ID of the parent folder (null for root folder)
-  final List<Folder> subFolders; // Subfolders within this folder
-  final List<File> files; // Files within this folder
-  final bool isHidden; // Whether the folder is hidden or not
-  final String icon; // Icon name, refers to Material Icons
-  final DateTime createdAt; // When the folder was created
-  final DateTime? modifiedAt; // When the folder was last modified
+  final String id;
+  final String name;
+  final String? parentId;
+  final List<Folder> subFolders;
+  final List<File> files;
+  final bool isHidden;
+  final String icon;
+  final DateTime createdAt;
+  final DateTime? modifiedAt;
 
   Folder({
     required this.id,
@@ -24,8 +24,40 @@ class Folder {
   })  : subFolders = subFolders ?? [],
         files = files ?? [];
 
-  List<Folder> getSubFolders() => List.unmodifiable(subFolders);
-  List<File> getFiles() => List.unmodifiable(files);
+  factory Folder.fromJson(Map<String, dynamic> json) {
+    return Folder(
+      id: json['id'].toString(), // Convert to String if necessary
+      name: json['name'],
+      parentId: json['parentId']?.toString(), // Convert to String if necessary
+      isHidden: json['isHidden'] ?? false,
+      icon: json['icon'],
+      createdAt: DateTime.parse(json['createdAt']),
+      modifiedAt: json['modifiedAt'] != null
+          ? DateTime.parse(json['modifiedAt'])
+          : null,
+      files: (json['files'] as List<dynamic>)
+          .map((fileJson) => File.fromJson(fileJson as Map<String, dynamic>))
+          .toList(),
+      subFolders: (json['subFolders'] as List<dynamic>)
+          .map((folderJson) =>
+              Folder.fromJson(folderJson as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'parentId': parentId,
+      'isHidden': isHidden,
+      'icon': icon,
+      'createdAt': createdAt.toIso8601String(),
+      'modifiedAt': modifiedAt?.toIso8601String(),
+      'files': files.map((file) => file.toJson()).toList(),
+      'subFolders': subFolders.map((folder) => folder.toJson()).toList(),
+    };
+  }
 
   Folder copyWith({
     String? id,
@@ -52,12 +84,14 @@ class Folder {
   }
 
   // Method to add a subfolder
-  void addSubFolder(Folder folder) {
-    subFolders.add(folder);
+  Folder addSubFolder(Folder folder) {
+    final updatedSubFolders = List<Folder>.from(subFolders)..add(folder);
+    return copyWith(subFolders: updatedSubFolders);
   }
 
   // Method to add a file
-  void addFile(File file) {
-    files.add(file);
+  Folder addFile(File file) {
+    final updatedFiles = List<File>.from(files)..add(file);
+    return copyWith(files: updatedFiles);
   }
 }
