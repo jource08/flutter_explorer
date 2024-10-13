@@ -71,7 +71,11 @@ class FolderProvider extends ChangeNotifier {
         Folder? parentFolder = rootFolders.firstWhere(
           (folder) => folder.id == parentId,
           orElse: () => Folder(
-              id: '', name: '', parentId: null, createdAt: DateTime.now(),fullPath: "/"),
+              id: '',
+              name: '',
+              parentId: null,
+              createdAt: DateTime.now(),
+              fullPath: ""),
         );
 
         // If the parent folder is found, select it
@@ -114,5 +118,73 @@ class FolderProvider extends ChangeNotifier {
   /// Gets visible files that are not hidden.
   List<File> getVisibleFiles(Folder folder) {
     return folder.files.where((file) => !file.isHidden).toList();
+  }
+
+  /// Selects a folder by its full path.
+  void selectFolderByFullPath(String fullPath) {
+    // Split the full path into segments
+    final segments =
+        fullPath.split('/').where((segment) => segment.isNotEmpty).toList();
+
+    // Starting point for searching
+    Folder? currentFolder;
+
+    // Check each root folder to find the first matching segment
+    for (var rootFolder in rootFolders) {
+      if (rootFolder.name == segments[0]) {
+        currentFolder = rootFolder;
+        break;
+      }
+    }
+
+    // Debug output
+    print('Attempting to select folder by full path: $fullPath');
+    print('Segments: $segments');
+
+    // Iterate through the segments to find the corresponding folder
+    for (String segment in segments) {
+      if (currentFolder == null) {
+        print('No current folder available. Exiting.');
+        return; // If there's no current folder, exit
+      }
+
+      // Find the next folder in the current folder's subfolders or ancestors
+      currentFolder = _findFolderInHierarchy(currentFolder, segment);
+
+      // Debug output
+      if (currentFolder != null) {
+        print('Current folder found: ${currentFolder.name}');
+      } else {
+        print('Current folder is null after searching for: $segment');
+      }
+    }
+
+    // If the folder is found, select it
+    if (currentFolder != null) {
+      print('Selecting folder: ${currentFolder.name}');
+      selectFolder(currentFolder);
+    } else {
+      print('No folder found for full path: $fullPath');
+    }
+  }
+
+  /// Helper method to search for a folder by name in the given folder and its hierarchy.
+  Folder? _findFolderInHierarchy(Folder folder, String segment) {
+    // Check if the current folder matches the segment
+    if (folder.name == segment) {
+      return folder; // Found the folder
+    }
+
+    // Recursively check subfolders
+    for (var subFolder in folder.subFolders) {
+      // Check in the subfolder recursively
+      Folder? foundFolder = _findFolderInHierarchy(subFolder, segment);
+      if (foundFolder != null) {
+        return foundFolder; // Return found folder from subfolder
+      }
+    }
+
+    // If not found, return null
+    return null;
   }
 }

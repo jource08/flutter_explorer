@@ -10,15 +10,18 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
   final double bottomBorderWidth = 1;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-      kToolbarHeight + 56 + bottomBorderWidth); // Adjust for secondary toolbar height
+  Size get preferredSize => Size.fromHeight(kToolbarHeight +
+      56 +
+      bottomBorderWidth); // Adjust for secondary toolbar height
 
   @override
   Widget build(BuildContext context) {
     final toolbarProvider = Provider.of<ToolbarProvider>(context);
     final folderProvider = Provider.of<FolderProvider>(context);
+
+    final currentFullPath = folderProvider.selectedFolder?.fullPath ?? "";
     // Update the path input field with the current path
-    toolbarProvider.pathController.text = folderProvider.selectedFolder?.fullPath ?? "/";
+    toolbarProvider.pathController.text = currentFullPath;
 
     return Container(
       decoration: BoxDecoration(
@@ -40,16 +43,40 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 icon: const Icon(Icons.arrow_forward),
                 onPressed: () {
-                  toolbarProvider.goForward(); // Implement forward functionality
+                  toolbarProvider
+                      .goForward(); // Implement forward functionality
                 },
               ),
-              // Up Button
               IconButton(
                 icon: const Icon(Icons.arrow_upward),
-                onPressed: () {
-                  folderProvider.goUpOneLevel(); // Go up one level
-                },
+                onPressed: folderProvider.selectedFolder?.parentId?.isEmpty ??
+                        true
+                    ? null
+                    : () {
+                        // Get the current full path
+                        String currentFullPath =
+                            folderProvider.selectedFolder?.fullPath ?? '';
+
+                        // Check if the current fullPath is not empty
+                        if (currentFullPath.isNotEmpty) {
+                          // Slice the current path to get the parent path
+                          List<String> pathSegments =
+                              currentFullPath.split('/');
+
+                          if (pathSegments.length > 1) {
+                            // Remove the last segment to go up one level
+                            String parentPath = pathSegments
+                                .sublist(0, pathSegments.length - 1)
+                                .join('/');
+                            folderProvider.selectFolderByFullPath(parentPath);
+                          } else {
+                            // If there's only one segment, set it to root (or handle accordingly)
+                            folderProvider.selectFolderByFullPath('/');
+                          }
+                        }
+                      },
               ),
+
               // Refresh Button
               IconButton(
                 icon: const Icon(Icons.refresh),
@@ -71,7 +98,8 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
                     fillColor: Colors.white,
                   ),
                   onSubmitted: (value) {
-                    toolbarProvider.setPath(value); // Update path when submitted
+                    toolbarProvider
+                        .setPath(value); // Update path when submitted
                   },
                 ),
               ),
