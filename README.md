@@ -21,13 +21,8 @@ The application should contain the following items:
 - **Upon clicking one of the folders on the left panel**, the right panel displays the list of direct sub folders of the clicked folder.
 
 
-📦 <project root>
- ├ 📂 drizzle
- ├ 📂 src
- │   ├ 📂 db
- │   │  └ 📜 schema.ts
- │   └ 📜 index.ts
- ├ 📜 .env
- ├ 📜 drizzle.config.ts
- ├ 📜 package.json
- └ 📜 tsconfig.json
+## Implemented Features
+- **Refresh button**
+- **Up one level button**
+- **Full path indicator**
+- **List and Grid view option**

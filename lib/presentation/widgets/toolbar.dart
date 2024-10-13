@@ -108,7 +108,8 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
                     filled: true,
                     fillColor: Colors.white,
                   ),
-                  enabled: !isLoading, // Disable input when loading
+                  // enabled: !isLoading, // Disable input when loading
+                  readOnly: true, // readOnly always for now
                   onSubmitted: (value) {
                     if (!isLoading) {
                       toolbarProvider
