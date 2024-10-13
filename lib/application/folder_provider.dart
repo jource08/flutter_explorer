@@ -29,8 +29,7 @@ class FolderProvider extends ChangeNotifier {
   final ApiService _apiService;
 
   // Constructor initializes the ApiService and loads folders
-  FolderProvider({Dio? dio})
-      : _apiService = ApiService(dio ?? Dio()) {
+  FolderProvider({Dio? dio}) : _apiService = ApiService(dio ?? Dio()) {
     loadFolders(); // Load folders when the provider is created
   }
 
@@ -60,6 +59,25 @@ class FolderProvider extends ChangeNotifier {
   void selectFolder(Folder folder) {
     _selectedFolder = folder;
     notifyListeners(); // Notify listeners about the change
+  }
+
+  /// Go up one level in the folder hierarchy.
+  void goUpOneLevel() {
+    if (_selectedFolder != null) {
+      // Find the parent folder
+      String? parentId = _selectedFolder!.parentId;
+      if (parentId != null) {
+        // Find the parent folder from the root folders
+        Folder? parentFolder = rootFolders.firstWhere(
+          (folder) => folder.id == parentId,
+          orElse: () => Folder(
+              id: '', name: '', parentId: null, createdAt: DateTime.now()),
+        );
+
+        // If the parent folder is found, select it
+        selectFolder(parentFolder);
+      }
+    }
   }
 
   /// Checks if a folder is expanded.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_explorer/application/folder_provider.dart';
 import 'package:flutter_explorer/application/toolbar_provider.dart';
 import 'package:flutter_explorer/presentation/widgets/toolbar_secondary.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final toolbarProvider = Provider.of<ToolbarProvider>(context);
-
+    final folderProvider = Provider.of<FolderProvider>(context);
     // Update the path input field with the current path
     toolbarProvider.pathController.text = toolbarProvider.currentPath;
 
@@ -46,7 +47,7 @@ class Toolbar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 icon: const Icon(Icons.arrow_upward),
                 onPressed: () {
-                  toolbarProvider.goUp(); // Go up one level
+                  folderProvider.goUpOneLevel(); // Go up one level
                 },
               ),
               // Refresh Button

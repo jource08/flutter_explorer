@@ -55,22 +55,6 @@ class ToolbarProvider extends ChangeNotifier {
     }
   }
 
-  // Method to implement up functionality
-  void goUp() {
-    // Assuming the path is a file system path
-    List<String> pathParts = _currentPath.split('/');
-    if (pathParts.length > 1) {
-      // Remove the last part to go up one level
-      pathParts.removeLast();
-      _currentPath = pathParts.join('/');
-      notifyListeners(); // Notify listeners about the change
-    } else if (pathParts.length == 1) {
-      // If there's only one part, we can set it to root or empty
-      _currentPath = '';
-      notifyListeners();
-    }
-  }
-
   // Method to implement refresh functionality
   void refresh() {
     // Implement refresh logic here, e.g., reloading the content of the current path
